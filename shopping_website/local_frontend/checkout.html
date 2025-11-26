@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1>Shopping Website</h1>
+            <div class="nav-links">
+                <a href="index.html">Products</a>
+                <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+                <a href="admin.html">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Checkout</h1>
+        
+        <div id="order-summary"></div>
+        
+        <form id="checkout-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <button type="submit" class="checkout-btn">Place Order</button>
+        </form>
+        
+        <div id="error-message" style="color: red; display: none;"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://michaelhobart.pythonanywhere.com';
+        
+        function displayOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const summaryDiv = document.getElementById('order-summary');
+            
+            if (cart.length === 0) {
+                window.location.href = 'cart.html';
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            summaryDiv.innerHTML = `
+                <h2>Order Summary</h2>
+                <ul>
+                    ${cart.map(item => `
+                        <li>${item.name} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</li>
+                    `).join('')}
+                </ul>
+                <p><strong>Total: $${total.toFixed(2)}</strong></p>
+            `;
+        }
+        
+        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            const orderData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                cart: cart  // Send cart as array, not string
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.status === 'success') {
+                    // Order successful - clear cart and redirect
+                    localStorage.removeItem('cart');
+                    window.location.href = 'confirmation.html';
+                } else {
+                    document.getElementById('error-message').textContent = result.message || 'Error placing order. Please try again.';
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('error-message').textContent = 'Error connecting to server. Please try again.';
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+        
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
+        }
+        
+        displayOrderSummary();
+        updateCartCount();
+    </script>
+</body>
+</html>

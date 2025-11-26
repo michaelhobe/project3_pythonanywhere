@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Website</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1>Shopping Website</h1>
+            <div class="nav-links">
+                <a href="index.html">Products</a>
+                <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+                <a href="admin.html">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Our Products</h1>
+        
+        <!-- Categories -->
+        <div class="product-categories">
+            <h2>E-books</h2>
+            <div class="product-grid" id="ebooks-grid">
+                <p>Loading products...</p>
+            </div>
+
+            <h2>Courses</h2>
+            <div class="product-grid" id="courses-grid">
+                <p>Loading products...</p>
+            </div>
+
+            <h2>Software</h2>
+            <div class="product-grid" id="software-grid">
+                <p>Loading products...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://michaelhobart.pythonanywhere.com';
+        
+        // Fetch products from API
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/api/products`);
+                if (!response.ok) throw new Error('Failed to load products');
+                
+                const data = await response.json();
+                const products = data.products || [];  // Extract products array from response
+                
+                // Organize by category
+                const categories = {
+                    ebooks: [],
+                    courses: [],
+                    software: []
+                };
+                
+                products.forEach(product => {
+                    if (categories[product.category]) {
+                        categories[product.category].push(product);
+                    }
+                });
+                
+                // Display products
+                displayProducts('ebooks', categories.ebooks);
+                displayProducts('courses', categories.courses);
+                displayProducts('software', categories.software);
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.querySelectorAll('.product-grid').forEach(grid => {
+                    grid.innerHTML = '<p style="color: red;">Error loading products. Please check if the API is running.</p>';
+                });
+            }
+        }
+        
+        function displayProducts(category, products) {
+            const grid = document.getElementById(`${category}-grid`);
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<p>No products available.</p>';
+                return;
+            }
+            
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" class="product-image">` : ''}
+                    <h3>${product.name}</h3>
+                    <p>${product.description || ''}</p>
+                    <p class="price">$${product.sell_price}</p>
+                    <button class="add-to-cart-btn" 
+                            onclick="addToCart(${product.id}, '${product.name}', ${product.sell_price})">
+                        Add to Cart
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function addToCart(id, name, price) {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert(`${name} added to cart!`);
+        }
+        
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
+        }
+        
+        // Load products and cart count on page load
+        loadProducts();
+        updateCartCount();
+    </script>
+</body>
+</html>

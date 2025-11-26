@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1>Shopping Website</h1>
+            <div class="nav-links">
+                <a href="index.html">Products</a>
+                <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+                <a href="admin.html">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="confirmation-message">
+            <h1>✓ Order Confirmed!</h1>
+            <p>Thank you for your order!</p>
+            <p>Your order has been successfully placed and will be processed shortly.</p>
+            <p>You will receive a confirmation email with your order details.</p>
+            
+            <div class="actions">
+                <a href="index.html" class="btn">Continue Shopping</a>
+                <a href="admin.html" class="btn">View All Orders</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
+        }
+        
+        updateCartCount();
+    </script>
+    
+    <style>
+        .confirmation-message {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .confirmation-message h1 {
+            color: #4CAF50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-message p {
+            font-size: 1.2em;
+            margin: 15px 0;
+        }
+        
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</body>
+</html>
