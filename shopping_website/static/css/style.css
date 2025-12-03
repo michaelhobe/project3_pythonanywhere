@@ -31,17 +31,47 @@ nav h1 a {
     text-decoration: none;
 }
 
+h1 {
+    text-align: center;
+    font-size: 45px;
+    margin-bottom: 1rem;
+}
+h2 {
+    text-align: center;
+    font-size: 35px;
+}
 .nav-links {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
 }
 
 .nav-links a {
-    color: white;
-    text-decoration: none;
+    color: #ffffff;
+    text-decoration: bold;
     padding: 0.5rem;
+    background-color: #0052a3;
+    border-radius: 4px;
 }
+
+
+.image-text {
+    font-family: "Bauhaus 93" !important;
+    font-size: 80px;
+    font-weight: normal;
+    background: url('https://images.stockcake.com/public/0/a/0/0a0e4d1f-cc89-4e41-9f29-6c47af054ee0/circuit-board-pattern-stockcake.jpg') center/cover no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+.image-text:hover {
+    opacity: 0.8;
+}
+
 
 .nav-links a:hover {
     background: #555;
@@ -168,6 +198,7 @@ nav h1 a {
     
     .nav-links {
         gap: 2rem;
+        
     }
     
     .add-to-cart-btn {
