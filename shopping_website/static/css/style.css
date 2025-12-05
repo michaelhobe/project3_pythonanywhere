@@ -68,6 +68,53 @@ h2 {
     color: transparent;
     -webkit-text-fill-color: transparent;
 }
+
+.hero {
+    position: relative;
+    width: 100%;
+}
+
+.landing_image {
+    width: 100%;
+    border-radius: 8px; /* optional: nicer look */
+    display: block;
+}
+
+.overlay {
+position: absolute;
+inset: 0;
+width: 100%;
+background: rgba(0, 0, 0, 0.4);
+
+}
+
+.intro p{
+    font-size: 20px;
+}
+
+.home_btn {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5%;
+    background-color:#0066cc;
+    color:#ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.overlay_text {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    text-align: center;
+
+}
+
 .image-text:hover {
     opacity: 0.8;
 }
