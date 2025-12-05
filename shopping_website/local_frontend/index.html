@@ -35,96 +35,10 @@
         </div>
     </div>
 
-    <script>
-        const API_URL = 'https://michaelhobart.pythonanywhere.com';
-        
-        // Fetch products from API
-        async function loadProducts() {
-            try {
-                const response = await fetch(`${API_URL}/api/products`);
-                if (!response.ok) throw new Error('Failed to load products');
-                
-                const data = await response.json();
-                const products = data.products || [];  // Extract products array from response
-                
-                // Organize by category
-                const categories = {
-                    ebooks: [],
-                    courses: []
-                };
-                
-                products.forEach(product => {
-                    if (categories[product.category]) {
-                        categories[product.category].push(product);
-                    }
-                });
-                
-                // Display products
-                displayProducts('ebooks', categories.ebooks);
-                displayProducts('courses', categories.courses);
-                
-            } catch (error) {
-                console.error('Error loading products:', error);
-                document.querySelectorAll('.product-grid').forEach(grid => {
-                    grid.innerHTML = '<p style="color: red;">Error loading products. Please check if the API is running.</p>';
-                });
-            }
-        }
-        
-        function displayProducts(category, products) {
-            const grid = document.getElementById(`${category}-grid`);
-            
-            if (products.length === 0) {
-                grid.innerHTML = '<p>No products available.</p>';
-                return;
-            }
-            
-            grid.innerHTML = products.map(product => `
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="../static/images/products/${product.image_url}" 
-                             alt="${product.name}" 
-                             class="product-image"
-                             onerror="this.src='../static/images/products/placeholder.jpg'">
-                    </div>
-                    <div class="product-info">
-                        <h3>${product.name}</h3>
-                        <p>${product.description || ''}</p>
-                        <p class="price">$${product.sell_price}</p>
-                        <button class="add-to-cart-btn" 
-                                onclick="addToCart(${product.id}, '${product.name}', ${product.sell_price})">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function addToCart(id, name, price) {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existingItem = cart.find(item => item.id === id);
-            
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ id, name, price, quantity: 1 });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            alert(`${name} added to cart!`);
-        }
-        
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
-        }
-        
-        // Load products and cart count on page load
-        loadProducts();
-        updateCartCount();
-    </script>
+    <!-- External JavaScript files -->
+    <script src="../static/js/cart.js"></script>
+    <script src="../static/js/main.js"></script>
+    <script src="../static/js/products.js"></script>
 
     <style>
         /* Additional styles for product images */
