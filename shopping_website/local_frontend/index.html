@@ -13,7 +13,7 @@
             <div class="nav-links">
                 <a href="index.html">Products</a>
                 <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
-                <a href="admin.html">Admin</a>
+                <!-- <a href="admin.html">Admin</a> -->
             </div>
         </div>
     </nav>
@@ -32,7 +32,24 @@
             <div class="product-grid" id="courses-grid">
                 <p>Loading products...</p>
             </div>
-        </div>
+
+            <h2>Software</h2>
+            <div class="product-grid" id="software-grid">
+                <p>Loading products...</p>
+            </div>
+<button id="openFormBtn">Login</button>
+
+<div id="loginForm" style="display:none; margin-top: 20px;">
+  <form action="admin.html" method="get">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="pwd">Password:</label><br>
+    <input type="password" id="pwd" name="password" placeholder="Enter your password" required minlength="8"><br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+</div>        </div>
     </div>
 
     <!-- External JavaScript files -->
@@ -73,11 +90,21 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: transform 0.2s ease;
         }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
         }
-    </style>
+        
+        // Load products and cart count on page load
+        loadProducts();
+        updateCartCount();
+
+        document.getElementById('openFormBtn').addEventListener('click', () => {
+        const form = document.getElementById('loginForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
 </body>
 </html>

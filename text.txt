@@ -1,0 +1,8 @@
+<form action="/submit_password.php" method="post">
+  <label for="username">Username:</label><br>
+  <input type="text" id="username" name="username"><br>
+  <label for="pwd">Password:</label><br>
+  <input type="password" id="pwd" name="password" placeholder="Enter your password" required minlength="8"><br><br>
+  <input type="submit" value="Submit">
+</form>
+dghjdft
