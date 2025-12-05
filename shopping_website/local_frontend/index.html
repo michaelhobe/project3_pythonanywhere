@@ -13,7 +13,7 @@
             <div class="nav-links">
                 <a href="index.html">Products</a>
                 <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
-                <a href="admin.html">Admin</a>
+                <!-- <a href="admin.html">Admin</a> -->
             </div>
         </div>
     </nav>
@@ -37,7 +37,19 @@
             <div class="product-grid" id="software-grid">
                 <p>Loading products...</p>
             </div>
-        </div>
+<button id="openFormBtn">Login</button>
+
+<div id="loginForm" style="display:none; margin-top: 20px;">
+  <form action="admin.html" method="get">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="pwd">Password:</label><br>
+    <input type="password" id="pwd" name="password" placeholder="Enter your password" required minlength="8"><br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+</div>        </div>
     </div>
 
     <script>
@@ -124,6 +136,11 @@
         // Load products and cart count on page load
         loadProducts();
         updateCartCount();
+
+        document.getElementById('openFormBtn').addEventListener('click', () => {
+        const form = document.getElementById('loginForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
     </script>
 </body>
 </html>
