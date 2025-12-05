@@ -2,12 +2,12 @@
 
 // Cart storage functions
 function getCart() {
-    const cart = localStorage.getItem('shopping_cart');
+    const cart = localStorage.getItem('cart');
     return cart ? JSON.parse(cart) : [];
 }
 
 function saveCart(cart) {
-    localStorage.setItem('shopping_cart', JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 // Add item to cart
@@ -79,7 +79,7 @@ function updateCartCount() {
 
 // Clear entire cart
 function clearCart() {
-    localStorage.removeItem('shopping_cart');
+    localStorage.removeItem('cart');
     updateCartCount();
     displayCart();
 }

@@ -17,7 +17,7 @@
             </div>
         </div>
     </nav>
-<!--  sdfkldfjb  -->
+
     <div class="container">
         <h1>Our Products</h1>
         
@@ -32,98 +32,52 @@
             <div class="product-grid" id="courses-grid">
                 <p>Loading products...</p>
             </div>
-
-            <h2>Software</h2>
-            <div class="product-grid" id="software-grid">
-                <p>Loading products...</p>
-            </div>
         </div>
     </div>
 
-    <script>
-        const API_URL = 'https://michaelhobart.pythonanywhere.com';
-        
-        // Fetch products from API
-        async function loadProducts() {
-            try {
-                const response = await fetch(`${API_URL}/api/products`);
-                if (!response.ok) throw new Error('Failed to load products');
-                
-                const data = await response.json();
-                const products = data.products || [];  // Extract products array from response
-                
-                // Organize by category
-                const categories = {
-                    ebooks: [],
-                    courses: [],
-                    software: []
-                };
-                
-                products.forEach(product => {
-                    if (categories[product.category]) {
-                        categories[product.category].push(product);
-                    }
-                });
-                
-                // Display products
-                displayProducts('ebooks', categories.ebooks);
-                displayProducts('courses', categories.courses);
-                displayProducts('software', categories.software);
-                
-            } catch (error) {
-                console.error('Error loading products:', error);
-                document.querySelectorAll('.product-grid').forEach(grid => {
-                    grid.innerHTML = '<p style="color: red;">Error loading products. Please check if the API is running.</p>';
-                });
-            }
+    <!-- External JavaScript files -->
+    <script src="../static/js/cart.js"></script>
+    <script src="../static/js/main.js"></script>
+    <script src="../static/js/products.js"></script>
+
+    <style>
+        /* Additional styles for product images */
+        .product-image-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+            background: #f8f9fa;
         }
-        
-        function displayProducts(category, products) {
-            const grid = document.getElementById(`${category}-grid`);
-            
-            if (products.length === 0) {
-                grid.innerHTML = '<p>No products available.</p>';
-                return;
-            }
-            
-            grid.innerHTML = products.map(product => `
-                <div class="product-card">
-                    ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" class="product-image">` : ''}
-                    <h3>${product.name}</h3>
-                    <p>${product.description || ''}</p>
-                    <p class="price">$${product.sell_price}</p>
-                    <button class="add-to-cart-btn" 
-                            onclick="addToCart(${product.id}, '${product.name}', ${product.sell_price})">
-                        Add to Cart
-                    </button>
-                </div>
-            `).join('');
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
-        
-        function addToCart(id, name, price) {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existingItem = cart.find(item => item.id === id);
-            
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ id, name, price, quantity: 1 });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            alert(`${name} added to cart!`);
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
-        
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
+
+        .product-info {
+            padding: 1rem;
         }
-        
-        // Load products and cart count on page load
-        loadProducts();
-        updateCartCount();
-    </script>
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+    </style>
 </body>
 </html>
