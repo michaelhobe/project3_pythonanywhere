@@ -31,35 +31,37 @@ def get_products():
     try:
         db = get_db_connection()
         cursor = db.cursor()
-        
-        # Match actual database structure: cost_price, sell_price, no description
+
+        # Match actual database structure: cost_price, sell_price, image_url
         cursor.execute("""
-            SELECT id, name, cost_price, sell_price, category, created_at 
-            FROM products 
+            SELECT id, name, cost_price, sell_price, category, image_url, created_at
+            FROM products
             ORDER BY id
         """)
-        
+
         products = []
         for row in cursor.fetchall():
+
             products.append({
                 'id': row[0],
                 'name': row[1],
                 'cost_price': float(row[2]),
                 'sell_price': float(row[3]),
-                'price': float(row[3]),  # Use sell_price as 'price' for frontend compatibility
+                'price': float(row[3]),
                 'category': row[4],
-                'created_at': row[5].isoformat() if row[5] else None
+                'image_url': row[5] if row[5] else 'placeholder.jpg',
+                'created_at': row[6].isoformat() if row[6] else None
             })
-        
+
         cursor.close()
         db.close()
-        
+
         return jsonify({
             'status': 'success',
             'products': products,
             'count': len(products)
         })
-        
+
     except Exception as e:
         return jsonify({
             'status': 'error',
@@ -72,15 +74,15 @@ def get_orders():
     try:
         db = get_db_connection()
         cursor = db.cursor()
-        
+
         # Check if customers table exists, if not just return basic order info
         cursor.execute("SHOW TABLES LIKE 'customers'")
         has_customers_table = cursor.fetchone() is not None
-        
+
         if has_customers_table:
             cursor.execute("""
-                SELECT o.id, c.name, c.email, o.total_amount, 
-                       o.order_date, o.status 
+                SELECT o.id, c.name, c.email, o.total_amount,
+                       o.order_date, o.status
                 FROM orders o
                 LEFT JOIN customers c ON o.customer_id = c.id
                 ORDER BY o.order_date DESC
@@ -88,11 +90,11 @@ def get_orders():
         else:
             # Fallback: return without customer details
             cursor.execute("""
-                SELECT id, customer_id, total_amount, order_date, status 
-                FROM orders 
+                SELECT id, customer_id, total_amount, order_date, status
+                FROM orders
                 ORDER BY order_date DESC
             """)
-        
+
         orders = []
         for row in cursor.fetchall():
             if has_customers_table:
@@ -114,16 +116,16 @@ def get_orders():
                     'order_date': row[3].isoformat() if row[3] else None,
                     'status': row[4]
                 })
-        
+
         cursor.close()
         db.close()
-        
+
         return jsonify({
             'status': 'success',
             'orders': orders,
             'count': len(orders)
         })
-        
+
     except Exception as e:
         return jsonify({
             'status': 'error',
@@ -135,43 +137,43 @@ def checkout():
     """Process a checkout - creates/updates customer and order"""
     try:
         data = request.get_json()
-        
+
         if not data:
             return jsonify({
                 'status': 'error',
                 'message': 'No data provided'
             }), 400
-        
+
         # Extract customer information
         customer_name = data.get('name')
         customer_email = data.get('email')
         cart_items = data.get('cart', [])
-        
+
         if not customer_name or not customer_email or not cart_items:
             return jsonify({
                 'status': 'error',
                 'message': 'Missing required fields'
             }), 400
-        
+
         # Calculate total
         total_amount = sum(item.get('price', 0) * item.get('quantity', 0) for item in cart_items)
-        
+
         db = get_db_connection()
         cursor = db.cursor()
-        
+
         # Check if customers table exists
         cursor.execute("SHOW TABLES LIKE 'customers'")
         has_customers_table = cursor.fetchone() is not None
-        
+
         customer_id = None
-        
+
         if has_customers_table:
             # Insert or update customer
             cursor.execute("""
                 SELECT id FROM customers WHERE email = %s
             """, (customer_email,))
             existing_customer = cursor.fetchone()
-            
+
             if existing_customer:
                 customer_id = existing_customer[0]
             else:
@@ -182,26 +184,26 @@ def checkout():
         else:
             # Create a default customer_id (1) if no customers table
             customer_id = 1
-        
+
         # Insert order with customer_id
         cursor.execute("""
             INSERT INTO orders (customer_id, total_amount, status)
             VALUES (%s, %s, %s)
         """, (customer_id, total_amount, 'pending'))
-        
+
         order_id = cursor.lastrowid
-        
+
         # Insert order items
         for item in cart_items:
             cursor.execute("""
                 INSERT INTO order_items (order_id, product_id, quantity, price)
                 VALUES (%s, %s, %s, %s)
             """, (order_id, item.get('id'), item.get('quantity'), item.get('price')))
-        
+
         db.commit()
         cursor.close()
         db.close()
-        
+
         return jsonify({
             'status': 'success',
             'message': 'Order placed successfully',
@@ -209,7 +211,7 @@ def checkout():
             'customer_id': customer_id,
             'total': total_amount
         })
-        
+
     except Exception as e:
         return jsonify({
             'status': 'error',
