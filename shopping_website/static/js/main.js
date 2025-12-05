@@ -11,6 +11,14 @@ document.addEventListener('click', function(e) {
         // Call addToCart function from cart.js
         addToCart(productId, productName, productPrice);
     }
+    
+    // Handle Login button click (toggle login form visibility)
+    if (e.target.id === 'openFormBtn') {
+        const form = document.getElementById('loginForm');
+        if (form) {
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    }
 });
 
 

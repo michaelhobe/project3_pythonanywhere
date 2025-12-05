@@ -17,8 +17,7 @@ async function loadProducts() {
         // Organize by category
         const categories = {
             ebooks: [],
-            courses: [],
-            software: []
+            courses: []
         };
         
         products.forEach(product => {
@@ -30,7 +29,6 @@ async function loadProducts() {
         // Display products for each category
         displayProducts('ebooks', categories.ebooks);
         displayProducts('courses', categories.courses);
-        displayProducts('software', categories.software);
         
     } catch (error) {
         console.error('Error loading products:', error);

@@ -32,12 +32,10 @@
             <div class="product-grid" id="courses-grid">
                 <p>Loading products...</p>
             </div>
+        </div>
 
-            <h2>Software</h2>
-            <div class="product-grid" id="software-grid">
-                <p>Loading products...</p>
-            </div>
-<button id="openFormBtn">Login</button>
+        <!-- Admin Login Button -->
+        <button id="openFormBtn">Login</button>
 
 <div id="loginForm" style="display:none; margin-top: 20px;">
   <form action="admin.html" method="get">
@@ -90,21 +88,11 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: transform 0.2s ease;
         }
-        
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
-        }
-        
-        // Load products and cart count on page load
-        loadProducts();
-        updateCartCount();
 
-        document.getElementById('openFormBtn').addEventListener('click', () => {
-        const form = document.getElementById('loginForm');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        });
-    </script>
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+    </style>
 </body>
 </html>
