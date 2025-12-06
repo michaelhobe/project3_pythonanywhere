@@ -17,6 +17,8 @@ DB_CONFIG = {
     'db': 'michaelhobart$project3'
 }
 
+
+
 def get_db_connection():
     """Create and return a database connection"""
     return MySQLdb.connect(**DB_CONFIG)
@@ -53,7 +55,7 @@ def get_products():
                 'sell_price': float(row[3]),
                 'price': float(row[3]),
                 'category': row[4],
-                'image_url': row[5] if row[5] else 'placeholder.jpg',
+                'image_url': f"/static/images/products/{row[5]}" if row[5] else "/static/images/placeholder.jpg",
                 'created_at': row[6].isoformat() if row[6] else None
             })
 

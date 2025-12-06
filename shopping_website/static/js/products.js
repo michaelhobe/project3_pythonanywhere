@@ -14,6 +14,40 @@ async function loadProducts() {
         const data = await response.json();
         const products = data.products || [];  // Extract products array from response
         
+
+        //Products description
+
+       // Ebooks Description
+products.forEach(product => {
+    if (product.name === "Web Dev Basics") {
+        product.description = "A beginner-friendly introduction to web development concepts.";
+    } else if (product.name === "Python Guide") {
+        product.description = "A step-by-step guide for learning Python fundamentals.";
+    } else if (product.name === "JavaScript Fundamentals") {
+        product.description = "Master the basics of JavaScript with practical examples.";
+    } else if (product.name === "Database Design") {
+        product.description = "Learn how to structure, model, and build relational databases.";
+    } else if (product.name === "CSS Mastery") {
+        product.description = "Improve your CSS skills with layouts, selectors, and styling techniques.";
+
+        //Courses Description
+    } else if (product.name === "Flask Course") {
+        product.description = "Learn how to build dynamic web applications using the Flask framework, including routing, templates, and backend integration."; 
+
+    } else if (product.name === "JavaScript Basics") {
+        product.description = "Learn the core concepts of JavaScript, including variables, functions, loops, and DOM interaction."; 
+
+    } else if (product.name === "Full Stack Development") {
+        product.description = "Discover how front-end and back-end technologies work together while building full-stack applications from start to finish."; 
+
+    } else if (product.name === "MySQL Database Course") {
+        product.description = "Learn how to design, manage, and query relational databases using MySQL — perfect for beginners and backend developers."; 
+
+    } else if (product.name === "React Fundamentals") {
+        product.description = "Understand the core concepts of React, including components, props, state, and building interactive user interfaces."; 
+    }});
+
+
         // Organize by category
         const categories = {
             ebooks: [],
