@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import MySQLdb
+import bcrypt
+
+
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Replace with a strong secret key
 CORS(app)  # Enable CORS for all routes
 
 # Database configuration
@@ -215,6 +219,40 @@ def checkout():
             'status': 'error',
             'message': str(e)
         }), 500
+    
+    ### dylans testing for password encryption ###
+
+  
+# Load user data
+with open("users.json", "r") as f:
+    users = json.load(f)
+
+@app.route("/", methods=["GET"])
+def home():
+    return "<a href='/protected'>Go to protected page</a>"
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password").encode('utf-8')
+
+        if username in users:
+            stored_hash = users[username].encode('utf-8')
+            if bcrypt.checkpw(password, stored_hash):
+                session["username"] = username
+                return redirect(url_for("protected"))
+
+        return render_template("login.html", error="Invalid username or password")
+
+    return render_template("login.html")
+
+@app.route("/protected")
+def protected():
+    if "username" not in session:
+        return redirect(url_for("login"))
+    return render_template("protected.html", user=session["username"])
+### end of dylans testing ###
 
 if __name__ == '__main__':
     app.run(debug=True)
