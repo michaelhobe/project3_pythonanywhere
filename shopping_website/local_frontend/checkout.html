@@ -6,7 +6,7 @@
     <title>Checkout</title>
     <link rel="stylesheet" href="../static/css/style.css">
 </head>
-<body>
+<body class="checkout-page">
     <nav>
         <div class="container">
             <h1 class="image-text">CodeStack</h1>
@@ -14,6 +14,7 @@
                 <a href="index.html">Products</a>
                 <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
               <!--  <a href="admin.html">Admin</a> -->
+                <a href="home.html">Home</a>
             </div>
         </div>
     </nav>
@@ -23,7 +24,7 @@
         
         <div id="order-summary"></div>
         
-        <form id="checkout-form">
+        <form id="checkout-form" style="max-width: 600px; margin: 0 auto;">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
